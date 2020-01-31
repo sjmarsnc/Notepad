@@ -40,7 +40,7 @@ var noteID = notesDB.counter;
 var app = express();
 var PORT = process.env.PORT || 3030;
 // tells express to find any static files  
-// app.use(express.static('public')); 
+app.use(express.static('public')); 
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -57,13 +57,7 @@ app.get("/", function (req, res) {
 
 
 app.get("/notes", function (req, res) {
-
-  const { counter } = notesDB;
-
-  // if no notes saved go to the add a note page 
-  if (counter === 0) res.sendFile(path.join(__dirname, "/public/addnote.html"), err => console.log(err));
-  else res.sendFile(path.join(__dirname, "/public/notes.html"));
-
+  res.sendFile(path.join(__dirname, "/public/notes.html"), err=> console.log(err));
 });
 
 app.get("/assets/js/:file", function (req, res) {
