@@ -40,7 +40,7 @@ var noteID = notesDB.counter;
 var app = express();
 var PORT = process.env.PORT || 3030;
 // tells express to find any static files  
-app.use(express.static('public')); 
+// app.use(express.static('public')); 
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
