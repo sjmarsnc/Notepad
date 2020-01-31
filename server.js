@@ -28,12 +28,8 @@ var notesDB = {
 readFileAsync(__dirname + "/db/db.json", "utf8")
 .then(function (dbJSON) {
   notesDB = JSON.parse(dbJSON);
-  console.log(notesDB);
 })
-.catch(function (err) {
-  // if file doesn't exist have set default above  
-  // console.log(err);
-});
+.catch( err => console.log(err));
 
 var noteID = notesDB.counter;
 
@@ -70,30 +66,17 @@ app.get("/notes", function (req, res) {
 
 });
 
-// app.get("/assets/js/index.js", function(req, res) {
-//   console.log(req.params.file); 
-//   res.sendFile(path.join(__dirname, "/assets/js/index.js"), err => console.log(err));
-// });
-
 app.get("/assets/js/:file", function (req, res) {
-  console.log(req.params.file);
   res.sendFile(path.join(__dirname, "/public/assets/js/", req.params.file), err => console.log(err));
 });
 
 app.get("/assets/css/:file", function (req, res) {
-  console.log(req.params.file);
   res.sendFile(path.join(__dirname, "/public/assets/css/", req.params.file), err => console.log(err));
 });
 
 
 // Return all saved notes 
 app.get("/api/notes", function (req, res) {
-  // readFileAsync(__dirname + '/db/db.json','utf8')
-  // .then( function (savedNotes) {    
-  //   console.log(savedNotes); 
-  //   return res.json(savedNotes);
-  // })
-  // .catch(err => console.log(err));
   return res.json(notesDB.notes);
 });
 
@@ -101,8 +84,6 @@ app.get("/api/notes", function (req, res) {
 app.get("/api/notes/:id", function (req, res) {
   console.log("get Route: /api/notes/:id", req); 
   var chosen = req.params.id;
-
-  console.log(chosen);
 
   for (let i = 0; i < notesDB.length; i++) {
     if (chosen === notesDB[i].noteID) {
@@ -117,7 +98,7 @@ app.get("/api/notes/:id", function (req, res) {
 app.delete("/api/notes/:id", function (req, res) {
 
   var chosen = parseInt( req.params.id );
-  console.log("delete Route /api/notes/:id   id=", chosen);  
+ console.log ("delete Route /api/notes/:id   id=", chosen);  
 
   for (let i = 0; i < notesDB.notes.length; i++) {
     
@@ -125,13 +106,12 @@ app.delete("/api/notes/:id", function (req, res) {
       notesDB.notes.splice(i,1);  
       writeFileAsync(__dirname + "/db/db.json", JSON.stringify(notesDB), "utf8")
         .then(function () {
-          return res.status(200).json({ msg: "Note successfully deleted!" });
+          return res.json({ msg: "Note successfully deleted!" });
          })
         .catch( err => console.log(err));       
     }
   }
 
-  return res.json( { msg: "note not found"});
 });
 
 app.get("/*", function (req, res) {
@@ -140,8 +120,7 @@ app.get("/*", function (req, res) {
 
 // Create New note - takes in JSON input
 app.post("/api/notes", function (req, res) {
-  console.log('tried to create a new note, noteID=', noteID);
-  console.log(req);
+  
   notesDB.counter ++; 
 
   notesDB.counter ++;  
@@ -153,7 +132,6 @@ app.post("/api/notes", function (req, res) {
   };
 
   notesDB.notes.push(newNote);
-  console.log(notesDB.notes);
 
   writeFileAsync(__dirname + "/db/db.json", JSON.stringify(notesDB), "utf8")
     .then(function () {
